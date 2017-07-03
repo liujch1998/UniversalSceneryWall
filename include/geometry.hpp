@@ -14,6 +14,9 @@ public:
 	{}
 
 	Vector2 operator+ (Vector2 v) const;
+	Vector2 operator- (Vector2 v) const;
+	static double Cross (const Vector2 &v1, const Vector2 &v2);
+	static double Det (const Vector2 &v0, const Vector2 &v1, const Vector2 &v2);
 	Vector2 Rotate (double rotation) const;
 	Vector2 Instantiate (Vector2 offset, double rotation);
 	

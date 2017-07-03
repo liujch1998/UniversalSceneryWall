@@ -59,6 +59,14 @@ void Task::Output () {
 		out_wall << result.ToString() << std::endl;
 	}
 	out_wall.close();
+
+	std::ofstream out_visual("output/visual.out");
+	for (Result &result : results) {
+		out_visual << result.layer_index << std::endl;
+		polygons[result.polygon_type].Instantiate(result.position, result.rotation).Output(out_visual);
+		out_visual << std::endl;
+	}
+	out_visual.close();
 }
 
 double Task::CoverageFraction (int layer_index) {
