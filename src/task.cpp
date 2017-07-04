@@ -8,6 +8,7 @@
 #include <random>
 
 #define PI (4*atan(1))
+#define EPS 1e-4
 
 std::string Result::ToString () {
 	return 
@@ -21,6 +22,8 @@ void Task::Input () {
 	std::ifstream in_wall("input/wall.in");
 	std::ifstream in_board("input/board.in");
 	in_wall >> frame_size.x >> frame_size.y;
+	std::vector<Vector2> frame_vertexs {Vector2(0, 0), Vector2(0, frame_size.y), Vector2(frame_size.x, frame_size.y), Vector2(frame_size.x, 0)};
+	frame = Polygon(frame_vertexs);
 	in_wall >> layer_cnt;
 	in_wall >> coverage_fraction_min >> overlap_fraction_max;
 	in_board >> polygon_cnt;
@@ -48,19 +51,43 @@ void Task::Generate () {
 			result.position.x = dist_x(engine);
 			result.position.y = dist_y(engine);
 			result.rotation = dist_r(engine);
-			results.push_back(result);
+			bool valid = true;
+			double area_inside = 
+				Polygon::Intersection(frame, polygons[result.polygon_type].Instantiate(result.position, result.rotation)).Area();
+			if (area_inside < polygons[result.polygon_type].Area() - EPS) {
+				valid = false;
+			}
+			for (Result &r : results) {
+				double area_intersection = Polygon::Intersection(
+					polygons[r.polygon_type].Instantiate(r.position, r.rotation), 
+					polygons[result.polygon_type].Instantiate(result.position, result.rotation)
+				).Area();
+				if (r.layer_index == result.layer_index && area_intersection > EPS) {
+					valid = false;
+				}
+				if (area_intersection > overlap_fraction_max * polygons[r.polygon_type].Area() ||
+					area_intersection > overlap_fraction_max * polygons[result.polygon_type].Area()) {
+					valid = false;
+				}
+			}
+			if (valid) {
+				results.push_back(result);
+			}
 		}
 	}
 }
 
 void Task::Output () {
 	std::ofstream out_wall("output/wall.out");
+	out_wall << results.size() << std::endl << std::endl;
 	for (Result &result : results) {
 		out_wall << result.ToString() << std::endl;
 	}
 	out_wall.close();
 
 	std::ofstream out_visual("output/visual.out");
+	out_visual << frame_size.x << ' ' << frame_size.y << std::endl << std::endl;
+	out_visual << results.size() << std::endl << std::endl;
 	for (Result &result : results) {
 		out_visual << result.layer_index << std::endl;
 		polygons[result.polygon_type].Instantiate(result.position, result.rotation).Output(out_visual);

@@ -15,9 +15,11 @@ public:
 
 	Vector2 operator+ (Vector2 v) const;
 	Vector2 operator- (Vector2 v) const;
+	Vector2 operator* (double d) const;
+	Vector2 Rotate (double rotation) const;
 	static double Cross (const Vector2 &v1, const Vector2 &v2);
 	static double Det (const Vector2 &v0, const Vector2 &v1, const Vector2 &v2);
-	Vector2 Rotate (double rotation) const;
+	static Vector2 Intersection (const Vector2 &v0a, const Vector2 &v0b, const Vector2 &v1a, const Vector2 &v1b);
 	Vector2 Instantiate (Vector2 offset, double rotation);
 	
 	std::string ToString ();
@@ -35,8 +37,11 @@ public:
 		, vertexs(vertexs)
 	{}
 
+	static Polygon Intersection (Polygon p1, Polygon p2);
 	double Area ();
-	Polygon operator& (const Polygon &p) const;
+//	static double AreaIntersect (const Polygon &p1, const Polygon &p2);
+//	static double AreaIntersectTriangle (const Polygon &p1, const Polygon &p2);
+//	std::vector<Polygon> Triangulate () const;
 	Polygon Instantiate (Vector2 offset, double rotation);
 
 	void Input (std::istream &in);

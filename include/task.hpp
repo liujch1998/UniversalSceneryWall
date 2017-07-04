@@ -25,6 +25,7 @@ public:
 
 public:
 	Vector2 frame_size;
+	Polygon frame;
 	int layer_cnt;
 	double coverage_fraction_min;
 	double overlap_fraction_max;
