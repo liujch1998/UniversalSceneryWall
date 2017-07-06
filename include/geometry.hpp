@@ -37,11 +37,8 @@ public:
 		, vertexs(vertexs)
 	{}
 
-	static Polygon Intersection (Polygon p1, Polygon p2);
 	double Area ();
-//	static double AreaIntersect (const Polygon &p1, const Polygon &p2);
-//	static double AreaIntersectTriangle (const Polygon &p1, const Polygon &p2);
-//	std::vector<Polygon> Triangulate () const;
+	static Polygon Intersection (Polygon p1, Polygon p2);
 	Polygon Instantiate (Vector2 offset, double rotation);
 
 	void Input (std::istream &in);

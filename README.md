@@ -18,8 +18,10 @@ This software generates specification of a random scenery wall used in Universal
 
 ### Usage
 
-run `./UniversalSceneryWall` to generate specification of scenery wall
-run `python src/visual.py` to generate visualization of the obtained scenery wall
+* run `make` to generate program
+* run `./UniversalSceneryWall` to generate specification of scenery wall
+* run `python src/visual.py output/visual.out` to generate visualization of the obtained scenery wall
+* run `make clean` to clean workspace
 
 ### Output
 

@@ -8,7 +8,7 @@
 #include <random>
 
 #define PI (4*atan(1))
-#define EPS 1e-4
+#define EPS 1e-2
 
 std::string Result::ToString () {
 	return 
