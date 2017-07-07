@@ -48,5 +48,5 @@ for layer_index in range(layer_cnt):
     
     ax.add_collection(pc)
     plt.axis([0,frame_x, 0,frame_y])
-	plt.savefig(str(layer_index) + '.png')
+    plt.savefig(str(layer_index) + '.png')
 

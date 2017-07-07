@@ -22,16 +22,17 @@ void Task::Input () {
 	std::ifstream in_wall("input/wall.in");
 	in_wall >> frame_size.x >> frame_size.y;
 	in_wall >> layer_cnt;
-	for (int i = 0; i < layer_cnt; i ++) {
-		double c, o, r1, r2;
-		int p1, p2;
-		in_wall >> c >> o >> r1 >> r2 >> p1 >> p2;
-		coverage_fraction_min.push_back(c);
-		overlap_fraction_max.push_back(o);
-		rotation_range.push_back({r1, r2});
-		polygon_range.push_back({p1, p2});
+	std::vector<double> buf(6*layer_cnt);
+	for (int i = 0; i < 6*layer_cnt; i ++) {
+		in_wall >> buf[i];
 	}
 	in_wall.close();
+	for (int i = 0; i < layer_cnt; i ++) {
+		coverage_fraction_min.push_back(buf[6*i]);
+		overlap_fraction_max.push_back(buf[6*i+1]);
+		rotation_range.push_back({buf[6*i+2], buf[6*i+3]});
+		polygon_range.push_back({(int)buf[6*i+4], (int)buf[6*i+5]});
+	}
 	std::vector<Vector2> frame_vertexs;
 	Vector2 a(0, 0); frame_vertexs.push_back(a);
 	Vector2 b(0, frame_size.y); frame_vertexs.push_back(b);
