@@ -20,31 +20,43 @@ std::string Result::ToString () {
 
 void Task::Input () {
 	std::ifstream in_wall("input/wall.in");
-	std::ifstream in_board("input/board.in");
 	in_wall >> frame_size.x >> frame_size.y;
-	std::vector<Vector2> frame_vertexs {Vector2(0, 0), Vector2(0, frame_size.y), Vector2(frame_size.x, frame_size.y), Vector2(frame_size.x, 0)};
-	frame = Polygon(frame_vertexs);
 	in_wall >> layer_cnt;
-	in_wall >> coverage_fraction_min >> overlap_fraction_max;
+	for (int i = 0; i < layer_cnt; i ++) {
+		double c, o, r1, r2;
+		int p1, p2;
+		in_wall >> c >> o >> r1 >> r2 >> p1 >> p2;
+		coverage_fraction_min.push_back(c);
+		overlap_fraction_max.push_back(o);
+		rotation_range.push_back({r1, r2});
+		polygon_range.push_back({p1, p2});
+	}
+	in_wall.close();
+	std::vector<Vector2> frame_vertexs;
+	Vector2 a(0, 0); frame_vertexs.push_back(a);
+	Vector2 b(0, frame_size.y); frame_vertexs.push_back(b);
+	Vector2 c(frame_size.x, frame_size.y); frame_vertexs.push_back(c);
+	Vector2 d(frame_size.x, 0); frame_vertexs.push_back(d);
+	frame = Polygon(frame_vertexs);
+	
+	std::ifstream in_board("input/board.in");
 	in_board >> polygon_cnt;
 	for (int i = 0; i < polygon_cnt; i ++) {
 		Polygon polygon;
 		polygon.Input(in_board);
 		polygons.push_back(polygon);
 	}
-	in_wall.close();
 	in_board.close();
 }
 
 void Task::Generate () {
-	results.clear();
-	std::uniform_int_distribution<int> dist_t(0, polygon_cnt-1);
-	std::uniform_real_distribution<double> dist_x(0.0, frame_size.x);
-	std::uniform_real_distribution<double> dist_y(0.0, frame_size.y);
-	std::uniform_real_distribution<double> dist_r(0.0, 2 * PI);
 	std::default_random_engine engine(time(0));
 	for (int layer_index = 0; layer_index < layer_cnt; layer_index ++) {
-		while (CoverageFraction(layer_index) < coverage_fraction_min) {
+		std::uniform_int_distribution<int> dist_t(polygon_range[layer_index].first, polygon_range[layer_index].second);
+		std::uniform_real_distribution<double> dist_x(0.0, frame_size.x);
+		std::uniform_real_distribution<double> dist_y(0.0, frame_size.y);
+		std::uniform_real_distribution<double> dist_r(rotation_range[layer_index].first, rotation_range[layer_index].second);
+		while (CoverageFraction(layer_index) < coverage_fraction_min[layer_index]) {
 			Result result;
 			result.polygon_type = dist_t(engine);
 			result.layer_index = layer_index;
@@ -65,8 +77,8 @@ void Task::Generate () {
 				if (r.layer_index == result.layer_index && area_intersection > EPS) {
 					valid = false;
 				}
-				if (area_intersection > overlap_fraction_max * polygons[r.polygon_type].Area() ||
-					area_intersection > overlap_fraction_max * polygons[result.polygon_type].Area()) {
+				if (area_intersection > overlap_fraction_max[layer_index] * polygons[r.polygon_type].Area() ||
+					area_intersection > overlap_fraction_max[layer_index] * polygons[result.polygon_type].Area()) {
 					valid = false;
 				}
 			}

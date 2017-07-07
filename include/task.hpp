@@ -27,8 +27,10 @@ public:
 	Vector2 frame_size;
 	Polygon frame;
 	int layer_cnt;
-	double coverage_fraction_min;
-	double overlap_fraction_max;
+	std::vector<double> coverage_fraction_min;
+	std::vector<double> overlap_fraction_max;
+	std::vector<std::pair<double,double> > rotation_range;
+	std::vector<std::pair<int,int> > polygon_range; // inclusive
 	int polygon_cnt;
 	std::vector<Polygon> polygons;
 
