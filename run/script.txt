@@ -1,0 +1,28 @@
+1. On a computer running Windows OS, download Cygwin installer: 
+	If on 32-bit machine, download from https://cygwin.com/setup-x86.exe
+	If on 64-bit machine, download from https://cygwin.com/setup-x86_64.exe
+
+2. Install Cygwin: 
+	Double-click setup-x86(_64).exe
+	Click "Next" several times
+	On page "Choose a download site", choose the first URL and click "Next"
+	On page "Select packages", select "Full" for "View" and enter "wget" for "Search"; on entry with "wget: ...", check its box under "Bin"
+	Wait for installation to complete
+	
+3. Run the following commands in Cygwin terminal: 
+	wget https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg
+	chmod +x apt-cyg ; mv apt-cyg /usr/local/bin
+	apt-cyg install gcc-core gcc-g++ make git
+	apt-cyg install python-devel libpng-devel libfreetype-devel
+	wget https://bootstrap.pypa.io/get-pip.py
+	python get-pip.py
+	pip install numpy ; pip install matplotlib
+	git clone https://github.com/liujch1998/UniversalSceneryWall.git
+	cd UniversalSceneryWall
+	mkdir obj
+	mkdir output
+	make
+	./UniversalSceneryWall.exe
+	./visual.py output/visual.out pic.png
+
+4. Coordinates are stored in output/wall.out and output/visual.out; plots are pic.png, 0.png, 1.png, 2.png
